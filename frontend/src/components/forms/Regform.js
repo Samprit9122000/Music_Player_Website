@@ -16,12 +16,13 @@ function Regform() {
     const {values,touched,errors,handleBlur,handleChange,handleSubmit}=useFormik({
         initialValues:initialvalue,
         validationSchema:signupschema,
-        onSubmit: (val)=>{
+        onSubmit: (val,action)=>{
             console.log(val)
+            action.resetForm()
         }
     })
-
-    console.log(errors)
+    // console.log(values)
+    // console.log(errors)
 
   return (
     <div className='reg' onSubmit={handleSubmit}>
