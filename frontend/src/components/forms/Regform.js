@@ -25,9 +25,11 @@ function Regform() {
     // console.log(errors)
 
   return (
-    <div className='reg' onSubmit={handleSubmit}>
-      <form>
+    <div className='reg' >
+      <form onSubmit={handleSubmit}>
+
         <h2>User Registration</h2>
+        
       <input type='text' name='username' placeholder='Username'
       value={values.username} onChange={handleChange} onBlur={handleBlur}/>
       {
