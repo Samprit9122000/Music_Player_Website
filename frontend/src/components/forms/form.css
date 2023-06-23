@@ -63,7 +63,7 @@ input:hover{
 #button{
     height: 3rem;
     width: 7rem;
-    margin: 2rem;
+    margin-top: 2rem;
     border-radius: 10rem;
     border: 1px solid rgba(255,255,255,0.1);
     background: rgba(255,255,255,0.3);
@@ -88,4 +88,13 @@ p{
 }
 h2{
     margin-top: 1.5rem;
+}
+a{
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+}
+a:hover{
+    text-decoration: underline;
+    color:white;
+    
 }

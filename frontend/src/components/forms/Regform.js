@@ -2,6 +2,7 @@ import React from 'react'
 import './form.css'
 import {useFormik} from 'formik'
 import signupschema from '../../schemas/formschema'
+import { Link } from 'react-router-dom'
 
 const initialvalue={
     username:"",
@@ -56,8 +57,12 @@ function Regform() {
 
 
       <input type='submit' id='button' value='Register'/>
+     <Link to='/login' > <div style={{marginTop:".5rem"}}>Or sign in</div> </Link>
+
 
       </form>  
+
+      
 
     </div>
   )
