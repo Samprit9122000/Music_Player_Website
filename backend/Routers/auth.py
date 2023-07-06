@@ -47,7 +47,7 @@ def verifyPassword(pwd,hashPwd):
 def authenticateUser(username:str,password:str,db):
     user=db.query(models.Users).filter(models.Users.username==username).first()
     if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="User email not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="User not found")
     if verifyPassword(password,user.password):
         return user
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="No user found. Password is wrong.")
@@ -58,8 +58,8 @@ ALGO = "HS256"
 
 oauth_bearer=OAuth2PasswordBearer(tokenUrl="/auth/login")
 
-def get_token(username:str,id:int):
-    user_details={"id":id,"username":username}
+def get_token(username:str,id:int,email:str):
+    user_details={"id":id,"username":username,"email":email}
     exp=datetime.utcnow()+timedelta(minutes=30)
     user_details.update({"exp":exp})
     token = jwt.encode(user_details,SECRET_KEY,algorithm=ALGO)
@@ -70,9 +70,10 @@ def get_current_user(token:str=Depends(oauth_bearer)):
         payload=jwt.decode(token,SECRET_KEY,algorithms=[ALGO])
         username=payload.get("username")
         id=payload.get("id")
+        email=payload.get("email")
         if username is None or id is None:
             raise HTTPException(status_code=401,detail="Invalid credentials")
-        return {"username":username,"id":id}
+        return {"username":username,"id":id,"email":email}
     
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="JWT ERROR")
@@ -87,7 +88,7 @@ def get_current_user(token:str=Depends(oauth_bearer)):
 # api requests
 
 @router.post('/register')
-def register(user:createUser,db:Session=Depends(get_db)):
+async def register(user:createUser,db:Session=Depends(get_db)):
     checkUser=db.query(models.Users).filter(models.Users.email==user.email).first()
     if(checkUser):
         return "User already exists. Please go for login..."
@@ -105,12 +106,44 @@ def register(user:createUser,db:Session=Depends(get_db)):
 
 
 @router.post('/login')
-def login(formData:OAuth2PasswordRequestForm=Depends(),db:Session=Depends(get_db)):
+async def login(formData:OAuth2PasswordRequestForm=Depends(),db:Session=Depends(get_db)):
     user_model=authenticateUser(formData.username,formData.password,db)
     if user_model is None:
         raise HTTPException(status_code=404,detail="user not found")
-    token=get_token(user_model.username,user_model.id)
+    token=get_token(user_model.username,user_model.id,user_model.email)
     
     return {"user":"authenticated","token":token}
+    
+
+@router.get("/user/details")
+async def user_details(user:dict=Depends(get_current_user),db:Session=Depends(get_db)):
+    if user is None:
+        raise HTTPException(status_code=404,detail="user not found")
+    user_model=db.query(models.Users).filter(models.Users.id==user.get("id")).first()
+    return user_model
+
+@router.put("/user/update")
+async def update_user(details:createUser,user:dict=Depends(get_current_user),db:Session=Depends(get_db)):
+    if user is None:
+        raise HTTPException(status_code=404,detail="user not found")
+    user_model=db.query(models.Users).filter(models.Users.id==user.get("id")).first()
+    user_model.email=details.email
+    user_model.username=details.username
+    user_model.password=hashPassword(details.password)
+    db.commit()
+    return "user information is updated successfully"
+
+@router.delete("/user/delete-account")
+async def delete_user(user:dict=Depends(get_current_user),db:Session=Depends(get_db)):
+    if user is None:
+        raise HTTPException(status_code=404,detail="user not found")
+    db.query(models.Users).filter(models.Users.id==user.get("id")).delete()
+    db.commit()
+
+    return "User account is deleted successfully"
+    
+
+    
+
     
     
