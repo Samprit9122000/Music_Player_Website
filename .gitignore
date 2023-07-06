@@ -1,0 +1,4 @@
+myenv/
+backend/musicPlayer.db
+backend/__pycache__/
+backend/Routers/__pycache__/
