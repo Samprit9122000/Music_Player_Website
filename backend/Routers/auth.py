@@ -44,8 +44,8 @@ def verifyPassword(pwd,hashPwd):
     return bcrypt.verify(pwd,hashPwd)
 
 # User authentication function
-def authenticateUser(username:str,password:str,db):
-    user=db.query(models.Users).filter(models.Users.username==username).first()
+def authenticateUser(email:str,password:str,db):
+    user=db.query(models.Users).filter(models.Users.email==email).first()
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="User not found")
     if verifyPassword(password,user.password):
@@ -91,7 +91,7 @@ def get_current_user(token:str=Depends(oauth_bearer)):
 async def register(user:createUser,db:Session=Depends(get_db)):
     checkUser=db.query(models.Users).filter(models.Users.email==user.email).first()
     if(checkUser):
-        return "User already exists. Please go for login..."
+        raise HTTPException(status_code=210,detail="User already exists. Please go for login...")
     
     user_model=models.Users()
     user_model.username=user.username
@@ -136,6 +136,9 @@ async def update_user(details:createUser,user:dict=Depends(get_current_user),db:
 @router.delete("/user/delete-account")
 async def delete_user(user:dict=Depends(get_current_user),db:Session=Depends(get_db)):
     if user is None:
+        raise HTTPException(status_code=404,detail="user not found")
+    user_model=db.query(models.Users).filter(models.Users.id==user.get("id")).first()
+    if user_model is None:
         raise HTTPException(status_code=404,detail="user not found")
     db.query(models.Users).filter(models.Users.id==user.get("id")).delete()
     db.commit()

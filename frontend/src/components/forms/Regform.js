@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './form.css'
 import {useFormik} from 'formik'
 import signupschema from '../../schemas/formschema'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const initialvalue={
     username:"",
@@ -12,14 +13,37 @@ const initialvalue={
 
 }
 
+const url="http://127.0.0.1:8000"
+
 function Regform() {
+
+    const redirect = useNavigate()
+    const[flag,setFlag]=useState(false)
 
     const {values,touched,errors,handleBlur,handleChange,handleSubmit}=useFormik({
         initialValues:initialvalue,
         validationSchema:signupschema,
         onSubmit: (val,action)=>{
-            console.log(val)
-            action.resetForm()
+            // console.log(val)
+
+            axios.post(`${url}/auth/register`,val)
+            .then((res)=>{
+              console.log(res)
+              if(res.status!==210){
+                action.resetForm()
+                redirect('/login')
+              }
+              else{
+                 setFlag(true) 
+              }
+            })
+            .catch((err)=>{
+              if(err!==null)
+                console.log(err)
+            })
+
+            
+
         }
     })
     // console.log(values)
@@ -27,6 +51,16 @@ function Regform() {
 
   return (
     <div className='reg' >
+      {
+        flag ? 
+
+        <div>
+          <h1 style={{color:"white"}}>User already exists</h1>
+          <Link to='/login'><h4>Go to login page</h4></Link>
+        </div> 
+
+        :
+
       <form onSubmit={handleSubmit}>
 
         <h2>User Registration</h2>
@@ -62,7 +96,7 @@ function Regform() {
 
       </form>  
 
-      
+    }
 
     </div>
   )

@@ -1,0 +1,5 @@
+myenv/
+musicPlayer.db
+__pycache__/
+Routers/__pycache__/
+/node_modules
