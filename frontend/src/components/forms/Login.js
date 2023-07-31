@@ -1,12 +1,14 @@
 import React from "react"
 import "./Login.css"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import axios from 'axios'
 import urls from "../../constants"
+
 
 export default function Login() {
     const data={username: "",password: ""}
     const [formData, setFormData] = React.useState(data)
+    const redirect = useNavigate()
     
     
     
@@ -31,15 +33,21 @@ export default function Login() {
             console.log(res)
             localStorage.setItem("token",res.data.token)
             setFormData(data)
+            redirect('/home')
+
         }).catch((err)=>{
             console.log(err)
         })
 
         
     }
+
+
+
     
     return (
         <div className="form-container">
+            
             <form className="form" onSubmit={handleSubmit}>
             <h2 style={{color:"white"}}>User Login</h2>
                 <input 

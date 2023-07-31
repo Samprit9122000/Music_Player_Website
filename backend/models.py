@@ -11,3 +11,4 @@ class Users(Base):
     email=Column(String,unique=True,index=True)
     password=Column(String)
     isActive=Column(Boolean,default=True)
+

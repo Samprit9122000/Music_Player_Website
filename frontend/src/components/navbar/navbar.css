@@ -1,0 +1,65 @@
+body{
+    background-color:white;
+}
+.navbar{
+    background-color: black;
+    color: white;
+}
+
+.left{
+    display: flex;
+    flex-direction: row;
+
+}
+.left li{
+    list-style: none;
+    /* margin: .6rem; */
+    margin-left: 1rem;
+    margin-top: .4rem;
+    padding: 0.4rem;
+    padding-top: .9rem;
+
+
+}
+
+.right{
+    float: right;
+    display: flex;
+    flex-direction: row;
+}
+
+.right li{
+    list-style: none;
+    /* margin: .6rem; */
+    margin-right: 1rem;
+    margin-top: .4rem;
+    padding: 0.4rem;
+}
+.mid{
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+}
+a:hover{
+    text-decoration: none;
+    color: white;
+}
+
+#searchbar{
+    width: 15rem;
+}
+
+#searchbtn{
+    width: 5rem;
+    /* color: black; */
+}
+
+.active{
+    color: white;
+    font-weight: bolder;
+}
+
+.grand:hover{
+    cursor: pointer;
+}
+
