@@ -8,6 +8,9 @@ import Home from './components/home/Home';
 import About from './components/about/About';
 import Dashboard from './components/dashboard/Dashboard';
 import Contact from './components/contact/Contact';
+import Getalbum from './components/album/Getalbum';
+import Track from './components/track/Track';
+
 
 function App() {
   return (
@@ -23,6 +26,8 @@ function App() {
         <Route path='/about' element={<About/>}/>
         <Route path='/dashboard' element={<Dashboard/>}/>
         <Route path='/contact' element={<Contact/>}/>
+        <Route path='/album/:album_id' element={<Getalbum />}/>
+        <Route path='/track/:track_id' element={<Track />}/>
 
       </Routes>
 

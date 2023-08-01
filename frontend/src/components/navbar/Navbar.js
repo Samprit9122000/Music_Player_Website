@@ -5,12 +5,8 @@ import jwt from 'jwt-decode'
 import icon from './fabicon.png'
 
 
-function Navbar() {
-    // states 
-    const [search,setSearch]=useState("")
-    const [flag,setFlag]=useState("artist") //track
-    const [albums,setalbums]=useState([])
-    const [songs,setSongs] = useState([])
+function Navbar({flag,setFlag,search,setSearch,optionChange,handleClick,handleChange}) {
+    
 
     let user=''
     if(localStorage.getItem('token')){
@@ -25,10 +21,7 @@ function Navbar() {
         // redirect('/login')
     }
 
-    // optionChange
-    const optionChange=(e)=>{
-        setFlag(e.target.value)
-    }
+   
 
 
 
@@ -57,10 +50,10 @@ function Navbar() {
 
         <ul className='mid'>
             <li>
-                <input type='text' name='search' placeholder='search by artist name' id='searchbar'/>
+                <input type='text' name='search' placeholder='search by artist/track' id='searchbar' onChange={handleChange}/>
             </li>
             <li>
-                <input type='submit' value='search' id='searchbtn'/>
+                <input type='submit' value='search' id='searchbtn' onClick={handleClick}/>
             </li>
             <li>
 
@@ -88,7 +81,7 @@ function Navbar() {
             <div className="dropdown">
                 <div className=" dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     {user.username}
-                    {console.log(user)}
+                    {/* {console.log(user)} */}
                 </div>
                 <ul className="dropdown-menu">
                     <li><Link to='/dashboard' className="dropdown-item" >dashboard</Link></li>
