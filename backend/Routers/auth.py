@@ -76,7 +76,7 @@ def get_current_user(token:str=Depends(oauth_bearer)):
         return {"username":username,"id":id,"email":email}
     
     except JWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="JWT ERROR")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="JWT ERROR from get_current_user()")
 
 
 

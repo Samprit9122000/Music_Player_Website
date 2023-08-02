@@ -2,7 +2,7 @@ from fastapi import FastAPI,Depends
 from fastapi.middleware.cors import CORSMiddleware
 
 import models
-from Routers import auth
+from Routers import auth,playlist
 
 app=FastAPI()
 
@@ -20,3 +20,4 @@ app.add_middleware(
 
 
 app.include_router(auth.router)
+app.include_router(playlist.router)

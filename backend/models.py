@@ -12,3 +12,17 @@ class Users(Base):
     password=Column(String)
     isActive=Column(Boolean,default=True)
 
+    play=Relationship("Playlist",back_populates="owner")
+
+
+
+class Playlist(Base):
+    __tablename__="playlist"
+
+    id=Column(Integer,primary_key=True,index=True)
+    userId=Column(Integer,ForeignKey("users.id"))
+    trackId=Column(String)
+    trackName=Column(String)
+
+    owner=Relationship("Users",back_populates="play")
+
