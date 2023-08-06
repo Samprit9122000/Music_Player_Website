@@ -13,7 +13,7 @@
     align-items: center;
     /* opacity: 0.8; */
 }
-button{
+.but{
     height: 11rem;
     width: 21rem;
     border:2px solid black;

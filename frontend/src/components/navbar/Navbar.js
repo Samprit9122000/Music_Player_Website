@@ -40,7 +40,7 @@ function Navbar({flag,setFlag,search,setSearch,optionChange,handleClick,handleCh
         <div className='navbar'>
 
         
-        <ul className='left' style={{float:"left"}}>
+        <ul className='left' style={{float:"left",marginLeft:"1rem"}}>
             <li><img src={icon} height={35} width={35}/></li>
             <li><NavLink to='/home'>Home</NavLink></li>
             <li><NavLink to='/about'>About Us</NavLink></li>
@@ -71,7 +71,7 @@ function Navbar({flag,setFlag,search,setSearch,optionChange,handleClick,handleCh
             </li>
         </ul>
 
-        <ul className='right'>
+        <ul className='right' style={{marginRight:"4rem"}}>
         
         {
         localStorage.getItem('token') &&

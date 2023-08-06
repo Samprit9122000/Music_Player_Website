@@ -6,7 +6,7 @@ function Frontpage() {
   return (
     <div className='reg'>
 
-        <Link to='/register'><button>Get Started</button></Link>
+        <Link to='/register'><button className='but'>Get Started</button></Link>
       
     </div>
   )

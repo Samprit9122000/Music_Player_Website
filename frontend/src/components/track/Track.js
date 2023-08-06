@@ -2,6 +2,9 @@ import React, { useEffect,useState } from 'react'
 import './track.css'
 import { useLocation } from 'react-router-dom'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
+
+const backend_url="http://127.0.0.1:8000/playlist/add"
 
 function Track() {
 
@@ -18,6 +21,7 @@ function Track() {
         }).then((res)=>{
             console.log(res)
             const data={
+                id:res.data.id,
                 song:res.data.name,
                 album:res.data.album.name,
                 artist:res.data.album.artists[0].name,
@@ -36,29 +40,67 @@ function Track() {
     },[])
 
 
+    const handleClick=async ()=>{
+        const add={
+          trackId:details.id,
+          trackName:details.song
+        }
+        await axios.post(backend_url,add,{
+          headers:{
+            "Authorization":"Bearer "+localStorage.getItem("token")
+          }
+        }).then((res)=>{
+          console.log(res)
+          if(res.status==200){
+            alert(res.data)
+          }
+          else{
+            alert("Sorry, track is not added")
+          }
+        }).catch((err)=>{
+          if(err){
+              console.log(err)
+          }
+        })
+    }
+
+
 
 
   return (
+    <div>
+      <h1>{details.song}</h1>
+      <img src={details.image_url} height={350} width={300} style={{borderRadius:"15px",marginTop:"2rem"}}/><br/>
+      <button className='add' onClick={handleClick}>Add to playlist</button>
     <div  className='info'>
-      <h1>{song_name}</h1>
-      
-      <div>
-        <span>Name</span><span>{details.song}</span>
-      </div>
+    
+      <div className='inner'>
 
-      <div>
-        <span>Name</span><span>Xfcgvvg</span>
+      <div style={{display:"flex",flexDirection:"row",marginBottom:".5rem"}}><span className='left'>Name:</span>    <span className='right'>{details.song}</span><br/></div>
+      
+      <div style={{display:"flex",flexDirection:"row",marginBottom:".5rem"}}><span className='left'>Album:</span>    <span className='right'>{details.album}</span><br/></div>
+      
+      <div style={{display:"flex",flexDirection:"row",marginBottom:".5rem"}}><span className='left'>Artist:</span>    <span className='right'>{details.artist}</span><br/></div>
+      
+      <div style={{display:"flex",flexDirection:"row",marginBottom:".5rem"}}><span className='left'>Release:</span>    <span className='right'>{details.release}</span><br/></div>
+      
+      <div style={{display:"flex",flexDirection:"row",marginBottom:".5rem"}}><span className='left'>Duration:</span>    <span className='right'>{details.duration+" ms"}</span><br/></div>
+      
+      <div style={{display:"flex",flexDirection:"row",marginBottom:".5rem"}}><span className='left'>Preview_audio:</span>  
+      <span className='right'><audio src={details.preview_url} controls>
+      </audio>
+      </span>
+      <br/>
       </div>
-      <div>
-        <span>Name</span><span>Xfcgvvg</span>
-      </div>
-      <div>
-        <span>Name</span><span>Xfcgvvg</span>
-      </div>
-      <div>
-        <span>Namenbjkj</span><span>Xfcgvvg</span>
+      <br/>
+      <a href={`https://open.spotify.com/track/${details.id}`} target='_blank' style={{fontSize:"1.5rem",fontWeight:"bolder",textDecoration:"underline"}}>Click to listen the full song</a>
+      
+
+
       </div>
       
+
+    </div>
 
     </div>
   )

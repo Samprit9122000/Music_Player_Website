@@ -28,6 +28,10 @@ async def testing():
 async def addTrack(details:track,user:dict=Depends(get_current_user),db:Session=Depends(get_db)):
     if user is None:
         raise HTTPException(status_code=404,detail="invalid user (from router/playlist/addTrack)")
+    # do not add same track multiple times
+    model=db.query(models.Playlist).filter(models.Playlist.trackId==details.trackId).first()
+    if model is not None:
+        return "track is already present in database"
     playlist_model=models.Playlist()
     playlist_model.trackId=details.trackId
     playlist_model.trackName=details.trackName
@@ -35,7 +39,7 @@ async def addTrack(details:track,user:dict=Depends(get_current_user),db:Session=
 
     db.add(playlist_model)
     db.commit()
-    return {"status":"song is added in the playlist"}
+    return "song is added in the playlist"
 
 
 @router.get("/myplaylist")

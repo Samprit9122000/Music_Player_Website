@@ -9,6 +9,7 @@ body{
 .left{
     display: flex;
     flex-direction: row;
+    margin-left: 1rem;
 
 }
 .left li{

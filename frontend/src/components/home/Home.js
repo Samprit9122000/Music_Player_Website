@@ -156,7 +156,7 @@ const getAlbums=async (artist)=>{
           
               
           songs.map((item,index)=>{
-              return <Link to='#' key={index} >
+              return <Link to={`/track/${item.id}`} key={index} state={{song_name:item.name,track_id:item.id}} >
                       <Card name={item.name} image={item.album.images[0].url} id={item.id} release={item.album.release_date} type={item.type} />
                     </Link>
   
