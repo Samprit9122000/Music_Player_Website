@@ -68,12 +68,12 @@ function Dashboard() {
 
   return (
     <div>
-      <Navbar/>
+      {/* <Navbar/> */}
       {
         loggedin
         ?
       <div>
-      <h2 style={{textDecoration:"underline",marginBottom:".5rem"}}>User Details</h2>
+      <h2 style={{textDecoration:"underline",marginBottom:".5rem",paddingTop:"2rem"}}>User Details</h2>
       <h4>{`Name:  ${user.username}`}</h4>
       <h4>{`Email:  ${user.email}`}</h4>
       <div className='playlist'>

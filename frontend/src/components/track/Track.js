@@ -8,6 +8,7 @@ const backend_url="http://127.0.0.1:8000/playlist/add"
 
 function Track() {
 
+    const [loggedin,setLoggedin]=useState(true)
     const [details,setDetails] = useState({})
     const location=useLocation()
     const {song_name,track_id} = location.state
@@ -51,7 +52,7 @@ function Track() {
           }
         }).then((res)=>{
           console.log(res)
-          if(res.status==200){
+          if(res.status===200){
             alert(res.data)
           }
           else{
@@ -60,6 +61,7 @@ function Track() {
         }).catch((err)=>{
           if(err){
               console.log(err)
+              setLoggedin(false)
           }
         })
     }
@@ -69,6 +71,10 @@ function Track() {
 
   return (
     <div>
+      {
+        loggedin?
+
+      <div>
       <h1>{details.song}</h1>
       <img src={details.image_url} height={350} width={300} style={{borderRadius:"15px",marginTop:"2rem"}}/><br/>
       <button className='add' onClick={handleClick}>Add to playlist</button>
@@ -101,6 +107,13 @@ function Track() {
       
 
     </div>
+
+    </div>
+    :
+    <h2>Unauthorized user.<br/> Please login</h2>
+
+}
+
 
     </div>
   )

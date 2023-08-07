@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../navbar/Navbar'
 import Card from '../../card/Card'
 import Spinner from '../loader/Spinner'
+import Homescreen from './Homescreen'
 
 
 
@@ -21,6 +22,7 @@ function Home() {
   const [albums,setalbums]=useState([])
   const [songs,setSongs] = useState([])
   const [loading,setLoading]=useState(false)
+  const [clicked,setClicked]=useState(false)
 
   // URLs
   const SONG_URL=BASE_URL+`q=${search.replaceAll(" ","%20")}&type=track&limit=10`
@@ -59,7 +61,8 @@ function Home() {
 
   // onClick Method
   const handleClick=async (e)=>{
-    redirect('/home')
+    
+    setClicked(true)
     console.log("Serachin for "+search)
     if(flag==="artist"){
       setalbums([])
@@ -143,10 +146,14 @@ const getAlbums=async (artist)=>{
     <div >
       <Navbar search={search} flag={flag} setFlag={setFlag} setSearch={setSearch} optionChange={optionChange} handleChange={handleChange} handleClick={handleClick}/>
         {loading && <Spinner />}
+     
       <div style={{display:"flex",flexDirection:"row",flexWrap:"wrap",justifyContent:"center"}}>
       {
         localStorage.getItem('token') 
         ?
+
+        clicked ?
+
           // clicked
           flag==="artist"
           ?
@@ -166,6 +173,9 @@ const getAlbums=async (artist)=>{
                   })
               
           // clicked
+
+          :
+          <Homescreen getAlbums={getAlbums}/>
         
         
         :
@@ -174,7 +184,9 @@ const getAlbums=async (artist)=>{
 
 
       </div>
-      
+
+
+
     </div>
   )
 }
