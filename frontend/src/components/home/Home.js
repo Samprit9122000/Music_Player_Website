@@ -1,6 +1,6 @@
 import {React,useState,useEffect} from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../navbar/Navbar'
 import Card from '../../card/Card'
 import Spinner from '../loader/Spinner'
@@ -13,6 +13,7 @@ const BASE_URL=`https://api.spotify.com/v1/search?`
 
 
 function Home() {
+  const redirect = useNavigate()  /////////////////////////////////////////////////
 
   // states 
   const [search,setSearch]=useState("")
@@ -58,6 +59,7 @@ function Home() {
 
   // onClick Method
   const handleClick=async (e)=>{
+    redirect('/home')
     console.log("Serachin for "+search)
     if(flag==="artist"){
       setalbums([])
@@ -137,6 +139,7 @@ const getAlbums=async (artist)=>{
 
 
   return (
+
     <div >
       <Navbar search={search} flag={flag} setFlag={setFlag} setSearch={setSearch} optionChange={optionChange} handleChange={handleChange} handleClick={handleClick}/>
         {loading && <Spinner />}
@@ -168,7 +171,10 @@ const getAlbums=async (artist)=>{
         :
         <h3 style={{marginTop:"5rem"}}>You are not authenticated</h3>
       }
+
+
       </div>
+      
     </div>
   )
 }

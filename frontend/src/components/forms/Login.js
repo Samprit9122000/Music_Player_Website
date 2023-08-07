@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import "./Login.css"
 import { Link, useNavigate } from "react-router-dom"
 import axios from 'axios'
@@ -7,12 +7,14 @@ import urls from "../../constants"
 
 export default function Login() {
     const data={username: "",password: ""}
+    const [status,setStatus]=useState(false)
     const [formData, setFormData] = React.useState(data)
     const redirect = useNavigate()
     
     
     
     function handleChange(event) {
+        setStatus(false)
         const {name, value, type, checked} = event.target
         setFormData(prevFormData => ({
             ...prevFormData,
@@ -31,11 +33,19 @@ export default function Login() {
         }
         ).then((res)=>{
             console.log(res)
+            if(res.status===200){
+                setStatus(false)
+
+            }
             localStorage.setItem("token",res.data.token)
             setFormData(data)
             redirect('/home')
 
         }).catch((err)=>{
+             if(err.response.status===404){
+
+                 setStatus(true)
+             }
             console.log(err)
         })
 
@@ -47,7 +57,7 @@ export default function Login() {
     
     return (
         <div className="form-container">
-            
+            {status && <h1 style={{color:"white"}}>Invalid user</h1>}
             <form className="form" onSubmit={handleSubmit}>
             <h2 style={{color:"white"}}>User Login</h2>
                 <input 
@@ -75,6 +85,7 @@ export default function Login() {
                     Log In
                 </button>
                 <Link to='/register' > <div style={{marginTop:".5rem"}}>Or Register</div> </Link>
+            
             </form>
         </div>
     )

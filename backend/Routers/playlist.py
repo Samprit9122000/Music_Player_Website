@@ -60,9 +60,9 @@ async def deleteTrack(id:int,user:dict=Depends(get_current_user),db:Session=Depe
         raise HTTPException(status_code=404,detail="invalid user (from router/playlist/deleteTrack)")
     playlist_model=db.query(models.Playlist).filter(models.Playlist.id==id).first()
     if playlist_model is None:
-        raise HTTPException(status_code=404,detail="invalid trackId")
+        raise HTTPException(status_code=404,detail="invalid trackId or track is not present in playlist")
     
     db.query(models.Playlist).filter(models.Playlist.id==id).delete()
     db.commit()
 
-    return {"detail":"track is deleted from playlist"}
+    return "track is deleted from playlist"

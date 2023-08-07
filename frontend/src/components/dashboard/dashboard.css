@@ -1,0 +1,30 @@
+.playlist{
+    margin: auto;
+    padding: auto;
+    width: 40%;
+    min-height: 40vh;
+    border: 2px solid white;
+    border-radius: 10px;
+    margin-top: 3rem;
+    /* display: flex;
+    flex-direction: column; */
+    
+}
+
+.data{
+    text-align: left;
+    padding-left: .5rem;
+}
+
+.play:hover{
+     font-weight: bold;
+     text-decoration: underline;
+}
+
+img{
+    
+    margin-right: 1rem;
+    cursor: pointer;
+    
+    
+}
