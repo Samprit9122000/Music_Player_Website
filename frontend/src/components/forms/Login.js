@@ -5,6 +5,7 @@ import axios from 'axios'
 import urls from "../../constants"
 
 
+
 export default function Login() {
     const data={username: "",password: ""}
     const [status,setStatus]=useState(false)
@@ -24,7 +25,7 @@ export default function Login() {
     
     function handleSubmit(event) {
         event.preventDefault()
-        console.log(formData)
+        // console.log(formData)
         axios.post(`${urls.backend}/auth/login`,formData,
         {
             headers :{
@@ -87,6 +88,12 @@ export default function Login() {
                 <Link to='/register' > <div style={{marginTop:".5rem"}}>Or Register</div> </Link>
             
             </form>
+
+            <Link to='/forgot-password' >
+            <button className="reset">forgot password</button>
+            </Link>
+
+
         </div>
     )
 }

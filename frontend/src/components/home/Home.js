@@ -11,10 +11,16 @@ import Homescreen from './Homescreen'
 const CLIENT_ID="5c0f336fb13d41ef90249d77aa54131c"
 const CLIENT_SECRET="c289fe43f0c04f379321652f56c66e80"
 const BASE_URL=`https://api.spotify.com/v1/search?`
-
+const data= `grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`
+const authParameters={
+  headers:{
+      "Content-Type": "application/x-www-form-urlencoded"
+  }
+  
+}
 
 function Home() {
-  const redirect = useNavigate()  /////////////////////////////////////////////////
+  // const redirect = useNavigate()  /////////////////////////////////////////////////
 
   // states 
   const [search,setSearch]=useState("")
@@ -31,17 +37,10 @@ function Home() {
   // Generating spotify authorization token
   useEffect(()=>{
         
-    const authParameters={
-        headers:{
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
-        
-    }
-    const data= `grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`
 
         axios.post("https://accounts.spotify.com/api/token",data,authParameters)
         .then((res)=>{
-            // console.log(typeof(res.data.access_token))
+            // console.log(res)
             localStorage.setItem('token_spotify',res.data.access_token)  
         })
         .catch((err)=>{
@@ -67,7 +66,7 @@ function Home() {
     if(flag==="artist"){
       setalbums([])
     setLoading(true)    ///////////////////////////////////loading
-    await axios.get(ARTIST_URL,{
+    axios.get(ARTIST_URL,{
         headers:{
             "Authorization":"Bearer "+localStorage.getItem("token_spotify")
         }
@@ -89,7 +88,7 @@ function Home() {
         console.log("song:"+search)
         setSongs([])
         setLoading(true)             //////////////////////////////////////// loading
-        await axios.get(SONG_URL,{
+        axios.get(SONG_URL,{
             headers:{
                 "Authorization":"Bearer "+localStorage.getItem("token_spotify")
             }
@@ -112,9 +111,9 @@ function Home() {
 
 
 // getAlbums method
-const getAlbums=async (artist)=>{
+const getAlbums= (artist)=>{
   console.log(artist)
-  await axios.get(`https://api.spotify.com/v1/artists/${artist}/albums`,{
+  axios.get(`https://api.spotify.com/v1/artists/${artist}/albums`,{
       headers:{
           "Authorization":"Bearer "+localStorage.getItem('token_spotify')
       }
@@ -175,7 +174,7 @@ const getAlbums=async (artist)=>{
           // clicked
 
           :
-          <Homescreen getAlbums={getAlbums}/>
+          <Homescreen getAlbums={getAlbums} data={data} authParameters={authParameters}/>
         
         
         :

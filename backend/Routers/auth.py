@@ -11,6 +11,11 @@ import models
 from database import SessionLocal,engine
 from passlib.context import CryptContext
 from jose import JWTError, jwt
+import smtplib
+import random
+
+
+
 
 
 router = APIRouter(
@@ -32,6 +37,15 @@ def get_db():
 class createUser(BaseModel):
     username:str
     email:str
+    password:str
+
+# Basemodel for otp
+class email(BaseModel):
+    id:str
+
+# Basemodel for reset password
+class reset(BaseModel):
+    emailid:str
     password:str
 
 #password hashing
@@ -122,16 +136,16 @@ async def user_details(user:dict=Depends(get_current_user),db:Session=Depends(ge
     user_model=db.query(models.Users).filter(models.Users.id==user.get("id")).first()
     return user_model
 
-@router.put("/user/update")
-async def update_user(details:createUser,user:dict=Depends(get_current_user),db:Session=Depends(get_db)):
-    if user is None:
-        raise HTTPException(status_code=404,detail="user not found")
-    user_model=db.query(models.Users).filter(models.Users.id==user.get("id")).first()
-    user_model.email=details.email
-    user_model.username=details.username
-    user_model.password=hashPassword(details.password)
-    db.commit()
-    return "user information is updated successfully"
+# @router.put("/user/update")
+# async def update_user(details:createUser,user:dict=Depends(get_current_user),db:Session=Depends(get_db)):
+#     if user is None:
+#         raise HTTPException(status_code=404,detail="user not found")
+#     user_model=db.query(models.Users).filter(models.Users.id==user.get("id")).first()
+#     user_model.email=details.email
+#     user_model.username=details.username
+#     user_model.password=hashPassword(details.password)
+#     db.commit()
+#     return "user information is updated successfully"
 
 @router.delete("/user/delete-account")
 async def delete_user(user:dict=Depends(get_current_user),db:Session=Depends(get_db)):
@@ -144,6 +158,63 @@ async def delete_user(user:dict=Depends(get_current_user),db:Session=Depends(get
     db.commit()
 
     return "User account is deleted successfully"
+
+
+
+
+@router.put('/generateOTP')
+async def generateOTP(emailid:email,db:Session=Depends(get_db)):
+    user_model=db.query(models.Users).filter(models.Users.email==emailid.id).first()
+    if(user_model is None):
+         raise HTTPException(status_code=404,detail="user not found")
+    otp=random.randint(100000,999999)
+
+
+    # sending otp through email setup
+    gmail='samprit.official2@gmail.com'
+    password='ssdchuitijvcpnkm'
+    try:
+        server=smtplib.SMTP('smtp.gmail.com',587)
+        server.starttls()
+        server.login(gmail,password)
+        msg=f"OTP from Online Music Player\nHello, your 6 digit OTP is {otp}"
+        server.sendmail(gmail,emailid.id,msg)
+        server.quit()
+        # saving the otp in database
+        user_model.otp=otp
+        db.commit()
+        return "OTP is sent to the email"
+    except:
+        raise HTTPException(status_code=404,detail="Error occured")
+    
+
+@router.post("/verify/otp/")
+async def verifyOTP(otp:int,emailid:str,db:Session=Depends(get_db)):
+    user_model=db.query(models.Users).filter(models.Users.email==emailid).first()
+    if user_model is None:
+        raise HTTPException(status_code=404,detail="user not found")
+    if user_model.otp == otp:
+        return "OTP is verified"
+    raise HTTPException(status_code=404,detail="Incorrect OTP")
+    
+@router.put("/reset/password")
+async def resetPassword(data:reset,db:Session=Depends(get_db)):
+    user_model=db.query(models.Users).filter(models.Users.email==data.emailid).first()
+    if user_model is None:
+        raise HTTPException(status_code=404,detail="user not found")
+    user_model.password=hashPassword(data.password)
+    db.commit()
+    return "password is successfully changed"
+    
+
+        
+
+    
+    
+    
+
+    
+
     
 
     

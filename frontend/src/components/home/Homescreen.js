@@ -3,6 +3,7 @@ import './homescreen.css'
 import axios from 'axios'
 import Card from '../../card/Card'
 import { Link } from 'react-router-dom'
+import Spinner from '../loader/Spinner'
 
 
 const artist_urls={
@@ -11,12 +12,35 @@ const artist_urls={
     kishore:"https://api.spotify.com/v1/search?q=Kishore%20Kumar&type=artist"
 }
 
-function Homescreen({getAlbums}) {
+function Homescreen({getAlbums,data,authParameters}) {
 
     const [arijit,setArijit]=useState([])    // arijit singh's album
     const [atif,setAtif]=useState([])    // atif aslam's album
     const [kishore,setKishore]=useState([])    // kishore kumar's album
-    let counter1,counter2,counter3=0
+    const [loader,setLoader]=useState(true)
+    
+
+    // // authorisation token from spotify api
+    useEffect(()=>{
+        
+
+        axios.post("https://accounts.spotify.com/api/token",data,authParameters)
+        .then((res)=>{
+            // console.log(res)
+            localStorage.setItem('token_spotify',res.data.access_token)  
+        })
+        .catch((err)=>{
+            if(err){
+                console.log(err)
+            }
+        })
+
+    },[])
+
+
+
+
+
 
 
 
@@ -81,12 +105,12 @@ function Homescreen({getAlbums}) {
 
 
    useEffect( ()=>{
-    axios.get(artist_urls.atif,{
+     axios.get(artist_urls.atif,{
        headers:{
            "Authorization":"Bearer "+localStorage.getItem("token_spotify")
        }
    })
-   .then((res)=>{
+   .then(async (res)=>{
        // console.log(res)
        var artist=res.data.artists.items[0].id
        axios.get(`https://api.spotify.com/v1/artists/${artist}/albums?offset=0&limit=7`,{
@@ -96,6 +120,7 @@ function Homescreen({getAlbums}) {
        }).then((res)=>{
            console.log(res)
            setAtif(res.data.items)
+           setLoader(false)
        }).catch((err)=>{
            if(err){
                console.log(err)
@@ -113,8 +138,14 @@ function Homescreen({getAlbums}) {
 
 
   return (
-    <div className='homescreen'>
+    <>
+    {
+        loader?
+        <Spinner />
+        :
 
+
+    <div className='homescreen'>
 
       <h1>Best of Kishore Kumar</h1>
       {/* {console.log(arijit)} */}
@@ -159,6 +190,13 @@ function Homescreen({getAlbums}) {
 
 
     </div>
+    
+    
+
+}
+
+</>
+
   )
 }
 

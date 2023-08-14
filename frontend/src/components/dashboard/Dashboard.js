@@ -82,26 +82,51 @@ function Dashboard() {
         {
           data.length>0?
        
-        <div className='data'>
+        // <div className='data'>
+
+
+        <table class="table table-warning">
+          <thead>
+            <tr className='table-dark'>
+              <th scope="col">#</th>
+              <th scope="col">Song</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+    
+    
+  
+
           {
             
             data.map((item,index)=>{
-              return  <div key={index}>
-
-                <div style={{display:"flex",flexDirection:"row",color:"white",justifyContent:"space-between"}}  >
-                <Link to={`/track/${item.trackId}`} className='play' state={{song_name:item.trackName,track_id:item.trackId}}>
-                  {`${index+1}. `+item.trackName}
+              return  <tr key={index} className='table-dark'>
+              <td scope="row">{index+1}</td>
+              <td><Link to={`/track/${item.trackId}`} className='play' state={{song_name:item.trackName,track_id:item.trackId}}>
+                  {item.trackName}
                 </Link>
-                <img src={icon} height={18}width={18} alt='delete' onClick={()=>handleClick(item.id)}/>
-                </div>
+              </td>
+              <td><img src={icon} height={18}width={18} alt='delete' onClick={()=>handleClick(item.id)}/></td>
+              </tr>
+              // <div key={index}>
+
+              //   <div style={{display:"flex",flexDirection:"row",color:"white",justifyContent:"space-between"}}  >
+              //   <Link to={`/track/${item.trackId}`} className='play' state={{song_name:item.trackName,track_id:item.trackId}}>
+              //     {`${index+1}. `+item.trackName}
+              //   </Link>
+              //   <img src={icon} height={18}width={18} alt='delete' onClick={()=>handleClick(item.id)}/>
+              //   </div>
                 
 
-                </div>
+              //   </div>
 
     
             })
           }
-          </div>
+          </tbody>
+        </table>
+          //  </div> 
           :
           <div style={{marginTop:'5rem'}}>Empty</div>
 

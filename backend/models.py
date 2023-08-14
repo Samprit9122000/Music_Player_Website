@@ -10,6 +10,7 @@ class Users(Base):
     username=Column(String)
     email=Column(String,unique=True,index=True)
     password=Column(String)
+    otp=Column(Integer,default=0)
     isActive=Column(Boolean,default=True)
 
     play=Relationship("Playlist",back_populates="owner")
