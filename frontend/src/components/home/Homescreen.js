@@ -7,8 +7,8 @@ import Spinner from '../loader/Spinner'
 
 
 const artist_urls={
-    arijit:"https://api.spotify.com/v1/search?q=Arijit%20Singh&type=artist",
-    atif:"https://api.spotify.com/v1/search?q=Atif%20Aslam&type=artist",
+    arijit:"https://api.spotify.com/v1/search?q=Arijit%20Singh&type=artist",  //h
+    atif:"https://api.spotify.com/v1/search?q=Atif%20Aslam&type=artist", //&type=artist
     kishore:"https://api.spotify.com/v1/search?q=Kishore%20Kumar&type=artist"
 }
 
@@ -19,6 +19,15 @@ function Homescreen({getAlbums,data,authParameters}) {
     const [kishore,setKishore]=useState([])    // kishore kumar's album
     const [loader,setLoader]=useState(true)
     
+    const sortByFollowers=(arr)=>{
+        const artist_data=arr
+            artist_data.sort((a,b)=>{
+                if(a.followers.total>b.followers.total){
+                    return -1;
+                }
+            })
+            return(artist_data)
+    }
 
     // // authorisation token from spotify api
     useEffect(()=>{
@@ -35,7 +44,11 @@ function Homescreen({getAlbums,data,authParameters}) {
             }
         })
 
+      
+
     },[])
+
+
 
 
 
@@ -52,7 +65,12 @@ function Homescreen({getAlbums,data,authParameters}) {
         })
         .then((res)=>{
             // console.log(res)
-            var artist=res.data.artists.items[0].id
+
+
+            const artist_data=sortByFollowers(res.data.artists.items)
+
+            console.log(artist_data)
+            var artist=artist_data[0].id
             axios.get(`https://api.spotify.com/v1/artists/${artist}/albums`,{
                 headers:{
                     "Authorization":"Bearer "+localStorage.getItem('token_spotify')
@@ -112,7 +130,7 @@ function Homescreen({getAlbums,data,authParameters}) {
    })
    .then(async (res)=>{
        // console.log(res)
-       var artist=res.data.artists.items[0].id
+       var artist=sortByFollowers(res.data.artists.items)[0].id
        axios.get(`https://api.spotify.com/v1/artists/${artist}/albums?offset=0&limit=7`,{
            headers:{
                "Authorization":"Bearer "+localStorage.getItem('token_spotify')

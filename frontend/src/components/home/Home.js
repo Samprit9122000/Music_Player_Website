@@ -34,6 +34,29 @@ function Home() {
   const SONG_URL=BASE_URL+`q=${search.replaceAll(" ","%20")}&type=track&limit=10`
   const ARTIST_URL=BASE_URL+`q=${search.replaceAll(" ","%20")}&type=artist`
 
+  
+  // sort by followers
+  const sortByFollowers=(arr)=>{
+    let newdata=[]
+    let i=0
+    console.log("searching for "+search)
+    for(i=0;i<arr.length;i++){
+    console.log(arr[i])
+
+        if(arr[i].name.toUpperCase()===search.toUpperCase()){
+          
+          newdata.push(arr[i])
+        }
+    }
+        newdata.sort((a,b)=>{
+            if(a.followers.total>b.followers.total){
+                return -1;
+            }
+        })
+        console.log(newdata)
+        return(newdata)
+}
+
   // Generating spotify authorization token
   useEffect(()=>{
         
@@ -73,7 +96,7 @@ function Home() {
     })
     .then((res)=>{
         // console.log(res)
-        var artist_id=res.data.artists.items[0].id
+        var artist_id=sortByFollowers(res.data.artists.items)[0].id
         getAlbums(artist_id)
         setLoading(false)   ////////////////////////////////////loading
     }).catch((err)=>{
